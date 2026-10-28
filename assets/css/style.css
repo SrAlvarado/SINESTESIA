@@ -1,0 +1,121 @@
+/* Layout: 1) portada pegada dos pantallas: capas que se funden, pregunta que se va, respuesta que aparece al invertirse.
+   2) definición en negro con luz de color que sigue al cursor. 3) las nueve canciones: cada una tiñe la pantalla de su color. */
+:root{
+  --blanco:#fbfbf9; --negro:#0a0a0a;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --mono:"JetBrains Mono","SF Mono",Menlo,monospace;
+  --t1:#d11c15; --t2:#4f4c6b; --t3:#9f5f45; --t4:#c47b24; --t5:#2e45b9; --t6:#bfe3ff; --t7:#b5b0a4; --t8:#e3b0f5; --t9:#fbfbf9;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--negro);color:var(--blanco);font-family:var(--mono);font-size:14px;-webkit-font-smoothing:antialiased}
+img{max-width:100%}
+.eyebrow{font:12px/1.8 var(--mono);letter-spacing:.22em;text-transform:uppercase}
+.display{font-family:var(--display);font-stretch:62%;font-weight:900;line-height:.82;letter-spacing:-.02em;text-transform:uppercase}
+
+/* ---------- 1 · PORTADA ---------- */
+.hero-wrap{height:200svh;position:relative}
+#a{position:sticky;top:0;height:100svh;overflow:hidden;touch-action:pan-y;isolation:isolate;cursor:crosshair;background:var(--blanco);color:var(--negro);transition:filter .5s cubic-bezier(.7,0,.2,1)}
+#a.inv{filter:invert(1)}
+.cap{position:absolute;z-index:40;top:0;left:0;right:0;padding:18px 20px;display:flex;justify-content:space-between;gap:16px;font:12px/1.5 var(--mono);letter-spacing:.04em;pointer-events:none;mix-blend-mode:difference;color:#fff}
+.cap .hint{text-align:right;opacity:.7;max-width:36ch}
+.cap .hint::before{content:"→ "}
+#a .word{position:absolute;z-index:3;mix-blend-mode:difference;color:#fff;pointer-events:none;white-space:nowrap;font-size:clamp(72px,19vw,260px)}
+#a .w1{top:10%;left:4vw}
+#a .w2{bottom:6%;right:4vw}
+#a .fig{position:absolute;z-index:2;left:50%;top:50%;width:min(62vh,88vw);aspect-ratio:690/1018;transform:translate(-50%,-50%);pointer-events:none}
+#a .fig img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;will-change:transform;filter:brightness(0)}
+#a .side{position:absolute;z-index:4;left:20px;top:50%;transform:translateY(-50%);mix-blend-mode:difference;color:#fff;pointer-events:none;max-width:24ch}
+#a .meta{position:absolute;z-index:4;left:20px;bottom:20px;font:12px/1.6 var(--mono);opacity:.75;max-width:40ch;mix-blend-mode:difference;color:#fff;pointer-events:none}
+#a .answer{position:absolute;z-index:5;left:0;right:0;bottom:7%;text-align:center;padding:0 16px;color:var(--negro);opacity:0;transform:translateY(24px);transition:opacity .6s .25s,transform .6s .25s;pointer-events:none}
+#a .answer .display{font-size:clamp(44px,11vw,150px);text-wrap:balance}
+#a .answer .eyebrow{margin-top:14px;opacity:.7}
+#a.inv .answer{opacity:1;transform:none}
+
+/* ---------- 2 · DEFINICIÓN ---------- */
+#def{position:relative;min-height:100svh;background:var(--negro);color:var(--blanco);overflow:hidden;isolation:isolate;display:grid;align-content:center;padding:14vh 20px;gap:28px;cursor:crosshair}
+#def canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+#def > *{position:relative;z-index:1}
+#def .big{font-size:clamp(56px,13vw,200px);mix-blend-mode:difference;color:#fff}
+#def .big span{display:block}
+#def .big span:nth-child(2){padding-left:12vw}
+#def .big span:nth-child(3){padding-left:28vw}
+#def .eyebrow{opacity:.6}
+#def .txt{font:13px/1.7 var(--mono);max-width:46ch;opacity:.8}
+#def .txt b{font-weight:700;opacity:1}
+#def .hint{position:absolute;right:20px;bottom:20px;font:12px var(--mono);opacity:.5;z-index:1}
+
+/* ---------- 3 · NUEVE CANCIONES ---------- */
+#tr{--c:var(--blanco);--fg:var(--negro);position:relative;min-height:100svh;background:var(--c);color:var(--fg);transition:background .45s,color .45s;overflow:hidden;isolation:isolate;padding:8vh 20px 10vh;display:grid;gap:5vh;align-content:center}
+#tr .head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px}
+#tr .snd{appearance:none;border:1px solid currentColor;background:none;color:inherit;font:700 11px var(--mono);letter-spacing:.18em;text-transform:uppercase;padding:12px 16px;cursor:pointer;transition:background .25s,color .25s}
+#tr .snd[aria-pressed=true]{background:var(--fg);color:var(--c)}
+#tr .snd:focus-visible{outline:2px solid currentColor;outline-offset:3px}
+#tr .head .display{font-size:clamp(40px,7.5vw,110px);text-wrap:balance}
+#tr .head .eyebrow{opacity:.7}
+#tr .body{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:6vw;align-items:start}
+#tr .list{list-style:none;margin:0;padding:0;display:grid;min-width:0}
+#tr .list li{border-top:1px solid currentColor;display:grid;grid-template-columns:3ch 1fr;gap:16px;align-items:baseline;padding:6px 0;cursor:pointer;outline:none}
+#tr .list li:last-child{border-bottom:1px solid currentColor}
+#tr .list .n{font:12px var(--mono);opacity:.6}
+#tr .list .t{font-size:clamp(28px,min(6vw,5.6vh),80px);transition:transform .3s;transform-origin:left}
+#tr .list li.on .t,#tr .list li:focus-visible .t{transform:translateX(.3em)}
+#tr .list li:focus-visible{box-shadow:inset 3px 0 0 currentColor}
+#tr .info{position:sticky;top:12vh;display:grid;gap:14px;font:13px/1.7 var(--mono);z-index:2;min-width:0;padding-top:.4em}
+#tr .info .num{font-family:var(--display);font-stretch:62%;font-weight:900;font-size:clamp(72px,11vw,170px);line-height:.8;letter-spacing:-.02em;opacity:.18;transition:opacity .4s}
+#tr .list li.on ~ .x, #tr.has .info .num{opacity:1}
+#tr .info .name{font-size:12px;letter-spacing:.2em;text-transform:uppercase}
+#tr .info p{margin:0;max-width:40ch}
+#tr .aura{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;--b:0;background:radial-gradient(ellipse at 50% 50%,transparent calc(46% + var(--b)*6%),color-mix(in srgb,var(--c) 62%,#0a0a0a) 100%);will-change:opacity}
+#tr.white .aura{background:radial-gradient(ellipse at 50% 50%,transparent calc(46% + var(--b)*6%),#cfccc6 100%)}
+#tr .head,#tr .body{position:relative;z-index:2}
+#tr .fig{position:absolute;z-index:0;left:50%;bottom:0;height:92%;transform:translateX(-50%);opacity:0;transition:opacity .6s;pointer-events:none}
+#tr .fig img{height:100%;width:auto;filter:brightness(0)}
+#tr.white .fig{opacity:1}
+#tr.white .list li{border-color:transparent}
+
+
+@media (max-width:700px){
+  .cap{flex-direction:column}.cap .hint{text-align:left;max-width:none}
+  #a .word{font-size:17vw}#a .w1{top:19%}#a .w2{bottom:12%;font-size:15vw}
+  #a .meta,#a .side{display:none}
+  #def .big span:nth-child(2){padding-left:6vw}#def .big span:nth-child(3){padding-left:14vw}
+  #tr .body{grid-template-columns:1fr}#tr .info{position:static;min-height:9em}#tr .info .num{font-size:64px}
+  #tr .fig{right:-10vw;height:60%;opacity:0}
+}
+
+/* ---------- 4 · CEREBRO ---------- */
+#br{position:relative;min-height:100svh;background:var(--blanco);color:var(--negro);overflow:hidden;isolation:isolate;display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.35fr);align-items:center;gap:5vw;padding:12vh 6vw;cursor:crosshair}
+#br .txt{display:grid;gap:22px;max-width:50ch;justify-self:center}
+#br .txt .display{font-size:clamp(44px,7vw,110px)}
+#br .txt p{margin:0;font:13px/1.75 var(--mono);opacity:.85}
+#br .txt .eyebrow{opacity:.6}
+#br .map{position:relative;width:100%;aspect-ratio:2/1;justify-self:center}
+#br .map canvas{position:absolute;inset:0;width:100%;height:100%}
+#br .steps{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;font:12px/1.6 var(--mono);max-width:1100px;justify-self:center;width:100%}
+#br .steps div{opacity:.35;transition:opacity .4s;border-top:1px solid currentColor;padding-top:10px}
+#br .steps div.on{opacity:1}
+#br .steps b{display:block;letter-spacing:.2em;text-transform:uppercase;font-size:11px;margin-bottom:4px}
+#br .hint{position:absolute;right:20px;bottom:20px;font:12px var(--mono);opacity:.5}
+/* ---------- 5 · CIERRE: cartulinas que se queman ---------- */
+.end-wrap{height:360svh;position:relative}
+#end{position:sticky;top:0;height:100svh;background:var(--blanco);color:var(--negro);overflow:hidden;isolation:isolate}
+#end canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+#end .final{position:absolute;inset:0;z-index:2;display:grid;align-content:center;justify-items:center;gap:4vh;padding:0 20px;text-align:center;opacity:0;transform:translateY(16px);transition:opacity .7s,transform .7s;pointer-events:none}
+#end.show .final{opacity:1;transform:none;pointer-events:auto}
+#end .final .display{font-size:clamp(44px,10vw,160px);text-wrap:balance}
+#end .final .eyebrow{opacity:.6}
+#end .final .credits{font:12px/1.8 var(--mono);opacity:.6;letter-spacing:.08em}
+#end .final a.sp{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--negro);color:var(--negro);text-decoration:none;font:700 12px var(--mono);letter-spacing:.18em;text-transform:uppercase;padding:14px 22px;transition:background .25s,color .25s}
+#end .final a.sp:hover,#end .final a.sp:focus-visible{background:var(--negro);color:var(--blanco);outline:none}
+#end .cap2{position:absolute;z-index:3;top:0;left:0;right:0;padding:18px 20px;font:12px/1.5 var(--mono);letter-spacing:.04em;pointer-events:none;mix-blend-mode:difference;color:#fff;display:flex;justify-content:space-between;gap:16px}
+#end .cap2 .n{font-family:var(--display);font-stretch:62%;font-weight:900;font-size:40px;line-height:1}
+
+@media (max-width:700px){
+  #br{grid-template-columns:1fr;padding:10vh 20px;gap:36px}
+  #br .txt .display{font-size:13vw}
+  #br .map{aspect-ratio:5/8}
+  #br .steps{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}

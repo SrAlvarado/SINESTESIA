@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sinestesia · Quién está aquí?</title>
+<meta name="description" content="Una web para entender la sinestesia a través de Lucho RK y de Quién está aquí?, un disco en el que cada canción es un color y el blanco es la suma de todos.">
+<meta property="og:title" content="Sinestesia · Quién está aquí?">
+<meta property="og:description" content="Cada canción es un color. El blanco es todos a la vez.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=JetBrains+Mono:wght@400;700&display=swap">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<div class="hero-wrap">
+<section id="a" aria-label="Portada">
+  <div class="cap"><div></div><div class="hint">Mueve el cursor: las capas se separan. Baja: se funden.</div></div>
+  <div class="word display w1" id="w1">¿Quién</div>
+  <div class="fig" aria-hidden="true">
+    <img src="assets/img/lucho_l1.png" alt="" data-depth="10">
+    <img src="assets/img/lucho_l2.png" alt="" data-depth="26">
+    <img src="assets/img/lucho_l3.png" alt="" data-depth="46">
+  </div>
+  <div class="word display w2" id="w2">está aquí?</div>
+  <div class="side eyebrow">Sinestesia<br>ver el sonido</div>
+  <div class="meta">Lucho RK y un disco en el que cada canción es un color.</div>
+  <div class="answer"><div class="display">No son colores.</div><div class="eyebrow">Es el blanco: todos a la vez</div></div>
+</section>
+</div>
+
+<section id="def" aria-label="Qué es la sinestesia">
+  <canvas id="glow" aria-hidden="true"></canvas>
+  <div class="eyebrow">Sinestesia · del griego <i>syn</i> (junto) + <i>aisthesis</i> (sensación)</div>
+  <div class="big display"><span>Un sentido</span><span>enciende</span><span>otro.</span></div>
+  <p class="txt">Oyes una canción y <b>ves un color</b>. No es una metáfora ni una elección: pasa sola, siempre igual, y le ocurre a cerca de un 4% de la gente. Cuando el disparador es el sonido se llama <b>cromestesia</b>.</p>
+  <div class="hint">→ mueve el cursor · haz clic</div>
+</section>
+
+<section id="tr" aria-label="Las nueve canciones">
+  <div class="head"><h2 class="display" style="margin:0">¿De qué color suena?</h2><button type="button" class="snd" id="snd" aria-pressed="false">Activar sonido</button></div>
+  <div class="body">
+  <ul class="list" id="list">
+    <li tabindex="0" data-bpm="98" data-c="var(--t1)" data-fg="#fff" data-d="Trap corto e intenso (1:04), Tunvao. Rojo puro: el mismo rojo que Lucho puso en la portada de 1STEP, su otro trap de presentación. Rápido y agresivo pide saturación."><span class="n">01</span><span class="t display">Big Checks</span></li>
+    <li tabindex="0" data-bpm="108" data-c="var(--t2)" data-fg="#fff" data-d="R&amp;B a lo Blxst, Juacko. Noche, serotonina, madurez. Gris violeta: el color exacto de la portada de Luluna, la canción nocturna de Lucho."><span class="n">02</span><span class="t display">La otra de Juacko</span></li>
+    <li tabindex="0" data-bpm="108" data-c="var(--t3)" data-fg="#fff" data-d="Pop urbano, Tunvao. Terracota: es el color que Lucho eligió para la portada del single, papel naranja rasgado que deja ver lila."><span class="n">03</span><span class="t display">Aiaiai</span></li>
+    <li tabindex="0" data-bpm="129" data-c="var(--t4)" data-fg="#0a0a0a" data-d="Funk brasileño. La letra lo dice: whisky caramelo, esta noche, apaga la luz. Ámbar oscuro, sabor convertido en color. Salió a la primera."><span class="n">04</span><span class="t display">Caramelo</span></li>
+    <li tabindex="0" data-bpm="118" data-c="var(--t5)" data-fg="#fff" data-d="Techno a 130, Juacko. Cosquilleo, calor, ojitos cristal. Azul eléctrico: el azul de la portada de Lucy, su otro tema de club."><span class="n">05</span><span class="t display">Cosquilleo</span></li>
+    <li tabindex="0" data-bpm="90" data-c="var(--t6)" data-fg="#0a0a0a" data-d="Balada a piano, AFTERMUSIC. Regalo de cumpleaños, cristal, vuelo. Celeste pálido: lento y tierno pide claridad y poca saturación. Es la palabra que usa Lucho: celeste."><span class="n">06</span><span class="t display">Un añito más</span></li>
+    <li tabindex="0" data-bpm="65" data-c="var(--t7)" data-fg="#0a0a0a" data-d="Trap tranquilo, Nake. La única canción del disco que nombra un color en la letra: gris. Gris cálido, camisa nueva, habitación blanca."><span class="n">07</span><span class="t display">Manley</span></li>
+    <li tabindex="0" data-bpm="108" data-c="var(--t8)" data-fg="#0a0a0a" data-d="Reggaeton, Botlok. Lila: el color que Lucho eligió para la portada del single, papel lila rasgado que deja ver naranja. Es el espejo de Aiaiai."><span class="n">08</span><span class="t display">Esos ojitos</span></li>
+    <li tabindex="0" data-bpm="101" data-c="var(--t9)" data-fg="#0a0a0a" data-d="Épica orquestal, D3llano. Blanco: la suma de las ocho. La respuesta al título. No la canta en directo."><span class="n">09</span><span class="t display">Aquí estoy</span></li>
+  </ul>
+  <div class="info" id="info"><div class="num">09</div><div class="name">Blanco</div><p>Pasa por cada canción para ver de qué color suena. El blanco es las nueve a la vez.</p></div>
+  </div>
+  <div class="fig" aria-hidden="true"><img src="assets/img/lucho_l1.png" alt=""></div>
+  <div class="aura" id="aura" aria-hidden="true"></div>
+</section>
+
+
+<section id="br" aria-label="Qué pasa en el cerebro">
+  <div class="txt">
+    <div class="eyebrow">Qué pasa dentro</div>
+    <h2 class="display" style="margin:0">Dos zonas que se tocan.</h2>
+    <p>El sonido se procesa en la corteza auditiva, en el lóbulo temporal. El color, en un área visual llamada V4, en la parte de atrás. De pequeños todos tenemos conexiones de sobra entre zonas del cerebro; con los años se podan. En un sinestésico, algunas se quedan.</p>
+    <p>Por eso cuando suena algo la señal no se queda en el oído: cruza a V4 y el color se enciende solo. No se aprende ni se elige. Se hereda y cada persona tiene su propio mapa, siempre el mismo.</p>
+  </div>
+  <div class="map">
+    <canvas id="brain" aria-hidden="true"></canvas>
+  </div>
+  <div class="steps" id="steps">
+    <div><b>1 · Suena una nota</b>Entra por el oído y llega a la corteza auditiva. Igual en los dos cerebros.</div>
+    <div><b>2 · Se procesa</b>La corteza auditiva la reconoce. En el cerebro típico, aquí se acaba.</div>
+    <div><b>3 · Se desborda</b>Solo en el sinestésico: la señal cruza por las conexiones que no se podaron y V4 se enciende. Ve azul.</div>
+  </div>
+  <div class="hint">→ toca un cerebro para repetir</div>
+</section>
+
+<div class="end-wrap">
+<section id="end" aria-label="Cierre">
+  <canvas id="burn" aria-hidden="true"></canvas>
+  <div class="cap2" id="cap2" aria-hidden="true"><div><span class="n" id="capn">01</span><br><span id="capt">Big Checks</span></div><div style="text-align:right;opacity:.7">→ sigue bajando: cada color se quema y deja ver el siguiente</div></div>
+  <div class="final">
+    <div class="eyebrow">Nueve colores · una sola luz</div>
+    <h2 class="display" style="margin:0">Ya sé quién está aquí.</h2>
+    <a class="sp" href="https://open.spotify.com/album/6zj1G3rfSSq1do2X3jPZ3s" target="_blank" rel="noopener">Escuchar Quién está aquí? en Spotify ↗</a>
+    <div class="credits">Quién está aquí? · Lucho RK · 2024<br>Una web sobre sinestesia</div>
+  </div>
+</section>
+</div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
