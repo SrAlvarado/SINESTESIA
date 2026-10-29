@@ -91,7 +91,7 @@
   function off(){ if(locked) return; clear(); }
   function toggle(li){
     if(locked===li){ locked=null; current=null; stopAudio(); items.forEach(x=>x.classList.remove('locked')); clear(); return; }
-    if(locked) return;                                         // hay otra seleccionada: hay que soltarla antes
+    items.forEach(x=>x.classList.remove('locked'));            // cambiar directamente de una a otra
     locked=li; current=li; li.classList.add('locked'); paint(li); playTrack(li);
   }
   items.forEach(li=>{
