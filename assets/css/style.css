@@ -62,6 +62,8 @@ img{max-width:100%}
 #tr .list .t{font-size:clamp(28px,min(6vw,5.6vh),80px);transition:transform .3s;transform-origin:left}
 #tr .list li.on .t,#tr .list li:focus-visible .t{transform:translateX(.3em)}
 #tr .list li:focus-visible{box-shadow:inset 3px 0 0 currentColor}
+#tr .list li.locked .t::after{content:' ■';font-size:.38em;vertical-align:middle}
+#tr .info .lock{font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.7;margin-top:6px}
 #tr .info{position:sticky;top:12vh;display:grid;gap:14px;font:13px/1.7 var(--mono);z-index:2;min-width:0;padding-top:.4em}
 #tr .info .num{font-family:var(--display);font-stretch:62%;font-weight:900;font-size:clamp(72px,11vw,170px);line-height:.8;letter-spacing:-.02em;opacity:.18;transition:opacity .4s}
 #tr .list li.on ~ .x, #tr.has .info .num{opacity:1}

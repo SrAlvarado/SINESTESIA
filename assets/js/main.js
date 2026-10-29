@@ -51,22 +51,25 @@
   // ----- audio: previews de 30 s servidos por Apple (API pública de iTunes)
   const ALBUM_ID=1769448072;
   const PREV_FALLBACK={"1": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/65/b0/8c/65b08c07-acfa-f498-33c6-9f25592dcf2b/mzaf_270720526825456712.plus.aac.p.m4a", "2": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/66/ad/45/66ad45ad-c05d-5754-02cd-d63ab2ba2e7d/mzaf_15677818632799157720.plus.aac.p.m4a", "3": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/5e/cd/fb/5ecdfb61-9b96-ac5d-6496-6f36f67b4e59/mzaf_16394877690728518729.plus.aac.p.m4a", "4": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a7/38/1b/a7381b0e-30ce-88fb-f834-e09e24566169/mzaf_12072973445122679888.plus.aac.p.m4a", "5": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/70/02/ba/7002ba10-4148-ec07-d802-2bcf2af47cf4/mzaf_15131799788038456596.plus.aac.p.m4a", "6": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/82/1f/d7/821fd739-a1c3-87e3-4f4d-2e85f72be664/mzaf_15885481440621389132.plus.aac.p.m4a", "7": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/7a/e8/c6/7ae8c644-2057-36ac-31e3-c9b7e525fabe/mzaf_11559461590708482042.plus.aac.p.m4a", "8": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/44/ad/20/44ad20df-6e03-d932-f751-8f61aa3dbdcb/mzaf_5556152982387665953.plus.aac.p.m4a", "9": "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/84/c7/bd/84c7bd94-0e6e-6185-ef2e-f24f3a320871/mzaf_3069125312526562495.plus.aac.p.m4a"};
+  const CHORUS={1:11,2:7,3:0,4:7.5,5:11.5,6:0,7:0,8:16.5,9:10}; // segundo del preview en el que entra el estribillo
   let previews=null;
   fetch('https://itunes.apple.com/lookup?id='+ALBUM_ID+'&entity=song&country=es').then(r=>r.json()).then(d=>{ const m={}; (d.results||[]).forEach(x=>{ if(x.wrapperType==='track' && x.previewUrl) m[x.trackNumber]=x.previewUrl; }); previews=Object.keys(m).length?m:PREV_FALLBACK; }).catch(()=>{ previews=PREV_FALLBACK; });
-  const audio=new Audio(); audio.crossOrigin='anonymous'; audio.preload='none'; audio.volume=0;
+  const audio=new Audio(); audio.crossOrigin='anonymous'; audio.preload='none'; audio.volume=0; audio.loop=true;
   const sndBtn=document.getElementById('snd');
   let soundOn=false, actx=null, analyser=null, fdata=null, current=null, fadeId=0, level=0;
   function fadeTo(target,done){ cancelAnimationFrame(fadeId); const from=audio.volume, t0f=performance.now(), dur=target>from?350:250;
     (function step(now){ const k=Math.max(0,Math.min(1,(now-t0f)/dur)); audio.volume=Math.max(0,Math.min(1,from+(target-from)*k)); if(k<1) fadeId=requestAnimationFrame(step); else if(done) done(); })(t0f); }
   function playTrack(li){ if(!soundOn||!li) return; const n=+li.querySelector('.n').textContent; const url=(previews||PREV_FALLBACK)[n]; if(!url) return;
     if(audio.getAttribute('src')!==url){ audio.setAttribute('src',url); audio.load(); }
-    audio.currentTime=0; const pr=audio.play(); if(pr) pr.catch(()=>{}); fadeTo(1); }
+    const seek=()=>{ try{ audio.currentTime=CHORUS[n]||0; }catch(e){} };
+    if(audio.readyState>=1) seek(); else audio.addEventListener('loadedmetadata',seek,{once:true});
+    const pr=audio.play(); if(pr) pr.catch(()=>{}); fadeTo(1); }
   function stopAudio(){ fadeTo(0,()=>audio.pause()); }
   sndBtn.addEventListener('click',()=>{
     soundOn=!soundOn; sndBtn.setAttribute('aria-pressed',String(soundOn)); sndBtn.textContent=soundOn?'Sonido activado':'Activar sonido';
     if(soundOn && !actx){ try{ actx=new (window.AudioContext||window.webkitAudioContext)(); const src=actx.createMediaElementSource(audio); analyser=actx.createAnalyser(); analyser.fftSize=256; analyser.smoothingTimeConstant=.6; src.connect(analyser); analyser.connect(actx.destination); fdata=new Uint8Array(analyser.frequencyBinCount); }catch(e){ actx=null; } }
     if(actx) actx.resume();
-    if(soundOn) playTrack(current); else stopAudio();
+    if(soundOn && locked) playTrack(locked); else stopAudio();
   });
   function audioLevel(){ if(!analyser||audio.paused||!soundOn) return -1; analyser.getByteFrequencyData(fdata); let sum=0; for(let i=1;i<=8;i++) sum+=fdata[i]; const v=sum/8/255; level=level*0.6+v*0.4; return level; }
 
@@ -74,20 +77,28 @@
   const tr=document.getElementById('tr'), info=document.getElementById('info'), items=[...document.querySelectorAll('#list li')];
   const base='<div class="num">09</div><div class="name">Blanco</div><p>Pasa por cada canción para ver de qué color suena. El blanco es las nueve a la vez.</p>';
   const aura=document.getElementById('aura'); let curBpm=0, beatT0=0;
-  function on(li){
-    const changed = current!==li; current=li;
+  let locked=null;
+  function paint(li){
     items.forEach(x=>x.classList.toggle('on',x===li));
-    if(changed) playTrack(li);
     if(+li.dataset.bpm!==curBpm){ curBpm=+li.dataset.bpm; beatT0=performance.now(); }
     tr.style.setProperty('--c',li.dataset.c); tr.style.setProperty('--fg',li.dataset.fg);
     tr.classList.toggle('white', li.dataset.c==='var(--t9)');
-    tr.classList.add('has'); info.innerHTML=`<div class="num">${li.querySelector('.n').textContent}</div><div class="name">${li.querySelector('.t').textContent}</div><p>${li.dataset.d}</p>`;
+    tr.classList.add('has');
+    info.innerHTML=`<div class="num">${li.querySelector('.n').textContent}</div><div class="name">${li.querySelector('.t').textContent}</div><p>${li.dataset.d}</p>`+(locked===li?'<p class="lock">■ Seleccionada · clic de nuevo para soltar</p>':'');
   }
-  function off(){ curBpm=0; current=null; stopAudio(); tr.classList.remove('has'); items.forEach(x=>x.classList.remove('on')); tr.style.setProperty('--c','var(--blanco)'); tr.style.setProperty('--fg','var(--negro)'); tr.classList.remove('white'); info.innerHTML=base; }
+  function clear(){ curBpm=0; items.forEach(x=>x.classList.remove('on')); tr.style.setProperty('--c','var(--blanco)'); tr.style.setProperty('--fg','var(--negro)'); tr.classList.remove('white'); tr.classList.remove('has'); info.innerHTML=base; }
+  function on(li){ if(locked) return; paint(li); }              // pasar el ratón: solo color
+  function off(){ if(locked) return; clear(); }
+  function toggle(li){
+    if(locked===li){ locked=null; current=null; stopAudio(); items.forEach(x=>x.classList.remove('locked')); clear(); return; }
+    if(locked) return;                                         // hay otra seleccionada: hay que soltarla antes
+    locked=li; current=li; li.classList.add('locked'); paint(li); playTrack(li);
+  }
   items.forEach(li=>{
     li.addEventListener('pointerenter',e=>{ if(e.pointerType!=='touch') on(li); });
     li.addEventListener('focus',()=>on(li));
-    li.addEventListener('click',()=>{ li.classList.contains('on') ? off() : on(li); });
+    li.addEventListener('click',()=>toggle(li));
+    li.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(li); } });
   });
   tr.addEventListener('pointerleave',e=>{ if(e.pointerType!=='touch') off(); });
   (function beat(now){
